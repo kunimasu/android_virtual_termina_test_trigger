@@ -5,6 +5,12 @@ inputs:
   kunimasu-url:
     required: true
     description: "kunimasu url"
+  repo-name:
+    required: true
+    description: "Repo name"
+  repo-owner:
+    required: true
+    description: "Repo owner"
 
 outputs:
   result:
@@ -15,5 +21,5 @@ runs:
   image: Dockerfile
   env:
     KUNIMASU_URL: ${{ inputs.kunimasu-url }}
-    REPO_NAME: ${{ github.repository }}
-    REPO_OWNER: ${{ github.repository }}
+    REPO_NAME: ${{ inputs.repo-name }}
+    REPO_OWNER: ${{ inputs.repo-owner }}
