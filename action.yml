@@ -15,3 +15,5 @@ runs:
   image: Dockerfile
   env:
     KUNIMASU_URL: ${{ inputs.kunimasu-url }}
+    REPO_NAME: ${{ github.repository }}
+    REPO_OWNER: ${{ github.repository }}
