@@ -7,7 +7,8 @@ KUNIMASU_URL: Final[str] = os.environ['KUNIMASU_URL']
 def main():
     if all([KUNIMASU_URL]):
         result: Final[requests.Response] = requests.post(KUNIMASU_URL)
-        print(result.json()["result"])
+        print(str(result.raw))
+        # print(result.json()["result"])
     else:
         print('Error: app information not configured')
 
