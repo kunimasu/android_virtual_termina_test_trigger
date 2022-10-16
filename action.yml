@@ -1,0 +1,17 @@
+name: test trigger
+description: "Test trigger for Kunimasu"
+
+inputs:
+  kunimasu-url:
+    required: true
+    description: "kunimasu url"
+
+outputs:
+  result:
+    description: "Kunimasu result"
+
+runs:
+  using: docker
+  image: Dockerfile
+  env:
+    KUNIMASU_URL: ${{ inputs.kunimasu-url }}
