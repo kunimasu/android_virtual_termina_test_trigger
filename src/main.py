@@ -1,6 +1,6 @@
 import os
+import time
 from typing import Final
-
 import requests
 
 KUNIMASU_URL: Final[str] = os.environ['KUNIMASU_URL']
@@ -9,6 +9,7 @@ REPO_OWNER: Final[str] = os.environ['REPO_OWNER']
 REPO_HEAD_SHA: Final[str] = os.environ['REPO_HEAD_SHA']
 
 def main():
+    time.sleep(10)
     if all([KUNIMASU_URL]):
         post_data = {
             'repo_name': REPO_NAME,
