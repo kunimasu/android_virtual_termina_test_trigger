@@ -11,6 +11,9 @@ inputs:
   repo-owner:
     required: true
     description: "Repo owner"
+  repo-head-sha:
+    required: true
+    description: "Repo head sha"
 
 outputs:
   result:
@@ -23,3 +26,4 @@ runs:
     KUNIMASU_URL: ${{ inputs.kunimasu-url }}
     REPO_NAME: ${{ inputs.repo-name }}
     REPO_OWNER: ${{ inputs.repo-owner }}
+    REPO_HEAD_SHA: ${{ inputs.repo-head-sha }}
