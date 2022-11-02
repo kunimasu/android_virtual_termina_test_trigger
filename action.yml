@@ -14,6 +14,9 @@ inputs:
   repo-head-sha:
     required: true
     description: "Repo head sha"
+  github-token:
+    required: true
+    description: "Github token"
 
 outputs:
   result:
@@ -27,3 +30,4 @@ runs:
     REPO_NAME: ${{ inputs.repo-name }}
     REPO_OWNER: ${{ inputs.repo-owner }}
     REPO_HEAD_SHA: ${{ inputs.repo-head-sha }}
+    GITHUB_TOKEN: ${{ inputs.github-token }}
