@@ -17,7 +17,6 @@ inputs:
   github-token:
     required: true
     description: "Github token"
-
 outputs:
   result:
     description: "Kunimasu result"
@@ -31,3 +30,5 @@ runs:
     REPO_OWNER: ${{ inputs.repo-owner }}
     REPO_HEAD_SHA: ${{ inputs.repo-head-sha }}
     GITHUB_TOKEN: ${{ inputs.github-token }}
+    GITHUB_API_URL: ${{ github.api_url }}
+    REPO: ${{ github.repository }}
