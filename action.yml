@@ -5,18 +5,10 @@ inputs:
   kunimasu-url:
     required: true
     description: "kunimasu url"
-  repo-name:
-    required: true
-    description: "Repo name"
-  repo-owner:
-    required: true
-    description: "Repo owner"
-  repo-head-sha:
+  head-sha:
     required: true
     description: "Repo head sha"
-  github-token:
-    required: true
-    description: "Github token"
+    default: ${{ github.sha }}
   github_api_url:
     description: The API URL of the GitHub server.
     default: ${{ github.api_url }}
@@ -32,9 +24,6 @@ runs:
   image: Dockerfile
   env:
     KUNIMASU_URL: ${{ inputs.kunimasu-url }}
-    REPO_NAME: ${{ inputs.repo-name }}
-    REPO_OWNER: ${{ inputs.repo-owner }}
-    REPO_HEAD_SHA: ${{ inputs.repo-head-sha }}
-    GITHUB_TOKEN: ${{ inputs.github-token }}
-    GITHUB_API_URL: ${{ inputs.api_url }}
-    REPO: ${{ inputs.repository }}
+    HEAD_SHA: ${{ inputs.head-sha }}
+    GITHUB_API_URL: ${{ inputs.github_api_url }}
+    REPOSITORY: ${{ inputs.repository }}
