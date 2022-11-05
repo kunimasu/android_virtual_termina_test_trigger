@@ -19,6 +19,7 @@ outputs:
     description: "Kunimasu result"
 
 runs:
+  pre-entrypoint: pre.sh
   using: docker
   image: Dockerfile
   env:
