@@ -14,16 +14,22 @@ inputs:
   repository:
     description: The full name of the repository for which the token will be requested.
     default: ${{ github.repository }}
-outputs:
-  result:
-    description: "Kunimasu result"
 
 runs:
-  pre-entrypoint: pre.sh
-  using: docker
-  image: Dockerfile
-  env:
-    KUNIMASU_URL: ${{ inputs.kunimasu-url }}
-    HEAD_SHA: ${{ inputs.head-sha }}
-    GITHUB_API_URL: ${{ inputs.github_api_url }}
-    REPOSITORY: ${{ inputs.repository }}
+  using: composite
+  steps:
+    - name: pwd
+      run: pwd
+      shell: bash
+    - name: call script
+      run: $GITHUB_ACTION_PATH/script.sh
+      shell: bash
+
+#runs:
+#  using: docker
+#  image: Dockerfile
+#  env:
+#    KUNIMASU_URL: ${{ inputs.kunimasu-url }}
+#    HEAD_SHA: ${{ inputs.head-sha }}
+#    GITHUB_API_URL: ${{ inputs.github_api_url }}
+#    REPOSITORY: ${{ inputs.repository }}
