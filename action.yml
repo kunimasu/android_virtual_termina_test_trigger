@@ -21,6 +21,9 @@ runs:
     - name: pwd
       run: pwd
       shell: bash
+    - name: chmod
+      run: chmod +x $GITHUB_ACTION_PATH/script.sh
+      shell: bash
     - name: call script
       run: $GITHUB_ACTION_PATH/script.sh
       shell: bash
