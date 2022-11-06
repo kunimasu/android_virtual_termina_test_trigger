@@ -28,7 +28,7 @@ runs:
       run: cd .kunimasu/${{ inputs.branch }}
       shell: bash
     - name: ls
-      run: ls -l
+      run: ls -la
       shell: bash
     - name: Setup yarn
       run: |
