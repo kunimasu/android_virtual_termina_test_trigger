@@ -24,20 +24,12 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - run: pwd
-      shell: bash
-    - run: ls .kunimasu
-      shell: bash
-    - run: ls .kunimasu/feature/test1
-#      run: cd .kunimasu/${{ inputs.branch }}
-      shell: bash
-    - run: ls -la
-      shell: bash
     - run: |
         yarn install
         yarn build
         node dist/bundle.js
       shell: bash
+      working-directory: .kunimasu/${{ inputs.branch }}
 
 #    - name: chmod
 #     run: chmod +x $GITHUB_ACTION_PATH/script.sh
