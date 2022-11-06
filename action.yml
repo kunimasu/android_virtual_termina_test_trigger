@@ -25,7 +25,8 @@ runs:
       with:
         node-version: 16
     - name: Change dir to kunimasu root
-      run: cd .kunimasu/${{ inputs.branch }}
+      run: cd .kunimasu/feature/test1
+#      run: cd .kunimasu/${{ inputs.branch }}
       shell: bash
     - name: ls
       run: ls -la
