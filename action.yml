@@ -26,9 +26,9 @@ runs:
         node-version: 16
     - run: pwd
       shell: bash
-    - run: echo $GITHUB_ACTION_PATH
+    - run: ls .kunimasu
       shell: bash
-    - run: cd .kunimasu/feature/test1
+    - run: ls .kunimasu/feature/test1
 #      run: cd .kunimasu/${{ inputs.branch }}
       shell: bash
     - run: ls -la
