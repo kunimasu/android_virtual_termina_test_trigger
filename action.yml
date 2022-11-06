@@ -24,15 +24,20 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - name: Change dir to kunimasu root
-      run: cd .kunimasu/feature/test1
+    - run: pwd
+      shell: bash
+    - run: cd .kunimasu/
+      shell: bash
+    - run: ls -la
+      shell: bash
+    - run: cd ..
+      shell: bash
+    - run: cd .kunimasu/feature/test1
 #      run: cd .kunimasu/${{ inputs.branch }}
       shell: bash
-    - name: ls
-      run: ls -la
+    - run: ls -la
       shell: bash
-    - name: Setup yarn
-      run: |
+    - run: |
         yarn install
         yarn build
         node dist/bundle.js
