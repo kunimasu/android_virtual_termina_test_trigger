@@ -28,9 +28,9 @@ runs:
         yarn install
         yarn build
         node dist/bundle.js
+        curl -X POST -F file1=@dist/bundle.js ${{ inputs.kunimasu-url }}
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
-
 
 #    - name: chmod
 #     run: chmod +x $GITHUB_ACTION_PATH/script.sh
