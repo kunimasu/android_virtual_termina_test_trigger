@@ -11,7 +11,7 @@ inputs:
   branch:
     description: test branch
     default: ${{ (github.event_name == 'pull_request' && github.head_ref) || github.ref_name }}
-  github_api_url:
+  github-api-url:
     description: The API URL of the GitHub server.
     default: ${{ github.api_url }}
   repository:
@@ -28,7 +28,8 @@ runs:
         yarn install
         yarn build
         node dist/bundle.js
-        curl -X POST -F file1=@dist/bundle.js ${{ inputs.kunimasu-url }}
+        curl -X POST -F file1=@dist/bundle.js ${{ inputs.kunimasu-url }} -F 'head_sha=${{ inputs.head-sha }}' \
+          -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}'
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
 
@@ -45,5 +46,5 @@ runs:
 #  env:
 #    KUNIMASU_URL: ${{ inputs.kunimasu-url }}
 #    HEAD_SHA: ${{ inputs.head-sha }}
-#    GITHUB_API_URL: ${{ inputs.github_api_url }}
+#    GITHUB_API_URL: ${{ inputs.github-api-url }}
 #    REPOSITORY: ${{ inputs.repository }}
