@@ -6,8 +6,8 @@ inputs:
     required: true
     description: "kunimasu url"
   head-sha:
-    required: true
-    description: "Repo head sha"
+    description: The head sha
+    default: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha }}
   branch:
     description: test branch
     default: ${{ (github.event_name == 'pull_request' && github.head_ref) || github.ref_name }}
@@ -30,6 +30,7 @@ runs:
         node dist/bundle.js
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
+
 
 #    - name: chmod
 #     run: chmod +x $GITHUB_ACTION_PATH/script.sh
