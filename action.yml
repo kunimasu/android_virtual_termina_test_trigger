@@ -58,12 +58,12 @@ runs:
         curl -X POST -H 'Content-Type: text/javascript' --data-binary @dist/bundle.js $bundle_storage_url
         curl -X POST -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
 
-#        curl -X POST $test_trigger_url \
-#          -F 'head_sha=${{ inputs.head-sha }}' \
-#          -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
-#          -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
-#          -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
-#          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'
+        curl -X POST $test_trigger_url \
+          -F 'head_sha=${{ inputs.head-sha }}' \
+          -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
+          -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
+          -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
+          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
 
