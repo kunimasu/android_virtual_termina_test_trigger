@@ -40,7 +40,7 @@ runs:
         bundle_hash_components=(`sha256sum dist/bundle.js`)
         bundle_hash=${bundle_hash_components[0]}
         
-        app_hash_components=(`sha256sum ${{ inputs.app-artifact-path }}`)
+        app_hash_components=(`sha256sum ../${{ inputs.app-artifact-path }}`)
         app_hash=${app_hash_components[0]}
         
         curl -X POST ${{ inputs.api-url }} \
