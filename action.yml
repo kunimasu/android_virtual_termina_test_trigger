@@ -54,7 +54,7 @@ runs:
         echo $app_storage_url
 
         curl -X POST -H 'Content-Type: text/javascript' --data-binary @dist/bundle.js $bundle_storage_url
-        curl -X POST -H 'application/vnd.android.package-archive' --data-binary @$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }} $app_storage_url
+        curl -X POST -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }} $app_storage_url
 
 # -F bundle=@dist/bundle.js -F app=@$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}
         curl -X POST $test_trigger_url \
