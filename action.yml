@@ -30,7 +30,8 @@ runs:
         target_device_list=`node dist/bundle.js targetDeviceList`
         echo $target_device_list
         sdk_version=`node dist/bundle.js sdkVersion`
-        bundle_hash=`sha256sum dist/bundle.js`
+        bundle_hash_components=(`sha256sum dist/bundle.js`)
+        bundle_hash=${bundle_hash_components[0]}
         echo $bundle_hash
         app_hash=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
         curl -X POST -F file1=@dist/bundle.js ${{ inputs.kunimasu-url }} -F 'head_sha=${{ inputs.head-sha }}' \
