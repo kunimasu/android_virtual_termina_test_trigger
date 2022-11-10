@@ -39,8 +39,7 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: bundle
-        path: dist/bundle.js
-      working-directory: .kunimasu/${{ inputs.branch }}
+        path: .kunimasu/${{ inputs.branch }}/dist/bundle.js
     - run: |
         target_device_list=`node dist/bundle.js targetDeviceList`
         echo $target_device_list
