@@ -44,10 +44,16 @@ runs:
         app_hash=${app_hash_components[0]}
         
         api_url=${{ inputs.api-url }}
-        api_url=${api_url/{api_name}/githubTestTrigger}
-        echo $api_url
+        test_trigger_url=${api_url/\{api_name\}/githubTestTrigger}
+        storage_access_token_url=${api_url/\{api_name\}/githubStorageAccessToken}
         
-        curl -X POST $api_url \
+        storage_access_tokens=(`curl -X POST $storage_access_token_url -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'`)
+        bundle_storage_url=${storage_access_tokens[0]}
+        app_storage_url=${storage_access_tokens[1]}
+        echo $bundle_storage_url
+        echo $app_storage_url
+        
+        curl -X POST $test_trigger_url \
           -F bundle=@dist/bundle.js -F app=@$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }} -F 'head_sha=${{ inputs.head-sha }}' \
           -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
           -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
