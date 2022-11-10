@@ -55,8 +55,8 @@ runs:
         echo $bundle_storage_url
         echo $app_storage_url
 
-        curl -X POST -H 'Content-Type: text/javascript' --data-binary @dist/bundle.js $bundle_storage_url
-        curl -X POST -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
+        curl -X PUT -H 'Content-Type: text/javascript' --data-binary @dist/bundle.js $bundle_storage_url
+        curl -X PUT -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
 
         curl -X POST $test_trigger_url \
           -F 'head_sha=${{ inputs.head-sha }}' \
