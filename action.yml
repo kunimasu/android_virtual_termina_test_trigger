@@ -33,6 +33,8 @@ runs:
     - run: |
         yarn install
         yarn build
+        
+        app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}
 
         target_device_list=`node dist/bundle.js targetDeviceList`
         sdk_version=`node dist/bundle.js sdkVersion`
@@ -40,7 +42,7 @@ runs:
         bundle_hash_components=(`sha256sum dist/bundle.js`)
         bundle_hash=${bundle_hash_components[0]}
         
-        app_hash_components=(`sha256sum $GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}`)
+        app_hash_components=(`sha256sum $app_artifact_full_path`)
         app_hash=${app_hash_components[0]}
         
         api_url=${{ inputs.api-url }}
@@ -54,15 +56,14 @@ runs:
         echo $app_storage_url
 
         curl -X POST -H 'Content-Type: text/javascript' --data-binary @dist/bundle.js $bundle_storage_url
-        curl -X POST -H "Content-Type: application/vnd.android.package-archive" --data-binary @$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }} $app_storage_url
+        curl -X POST -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
 
-# -F bundle=@dist/bundle.js -F app=@$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}
-        curl -X POST $test_trigger_url \
-          -F 'head_sha=${{ inputs.head-sha }}' \
-          -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
-          -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
-          -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
-          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'
+#        curl -X POST $test_trigger_url \
+#          -F 'head_sha=${{ inputs.head-sha }}' \
+#          -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
+#          -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
+#          -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
+#          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
 
