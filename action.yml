@@ -2,9 +2,15 @@ name: test trigger
 description: "Test trigger for Kunimasu"
 
 inputs:
-  kunimasu-url:
+  api-url:
     required: true
-    description: "kunimasu url"
+    description: api url
+  app-artifact-name:
+    required: true
+    description: app name
+  workflow-run-id:
+    description: workflow run Id
+    default: ${{ github.run_id }}
   head-sha:
     description: The head sha
     default: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha }}
@@ -27,6 +33,14 @@ runs:
     - run: |
         yarn install
         yarn build
+      shell: bash
+      working-directory: .kunimasu/${{ inputs.branch }}
+    - name: Upload bundle file
+      uses: actions/upload-artifact@v3
+      with:
+        name: bundle
+        path: dist/bundle.js
+    - run: |
         target_device_list=`node dist/bundle.js targetDeviceList`
         echo $target_device_list
         sdk_version=`node dist/bundle.js sdkVersion`
@@ -34,10 +48,11 @@ runs:
         bundle_hash=${bundle_hash_components[0]}
         echo $bundle_hash
         app_hash=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
-        curl -X POST -F file1=@dist/bundle.js ${{ inputs.kunimasu-url }} -F 'head_sha=${{ inputs.head-sha }}' \
+        curl -X POST -F file1=@dist/bundle.js ${{ inputs.api-url }} -F 'head_sha=${{ inputs.head-sha }}' \
           -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
+          -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
           -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
-          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"' \
+          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
 
