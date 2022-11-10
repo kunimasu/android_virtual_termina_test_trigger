@@ -43,7 +43,11 @@ runs:
         app_hash_components=(`sha256sum $GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}`)
         app_hash=${app_hash_components[0]}
         
-        curl -X POST ${{ inputs.api-url }} \
+        api_url=${{ inputs.api-url }}
+        api_url=${api_url/{api_name}/githubTestTrigger}
+        echo $api_url
+        
+        curl -X POST $api_url \
           -F bundle=@dist/bundle.js -F app=@$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }} -F 'head_sha=${{ inputs.head-sha }}' \
           -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
           -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
