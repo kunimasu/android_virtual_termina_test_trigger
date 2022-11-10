@@ -40,11 +40,14 @@ runs:
         bundle_hash_components=(`sha256sum dist/bundle.js`)
         bundle_hash=${bundle_hash_components[0]}
         
-        app_hash_components=(`sha256sum ../${{ inputs.app-artifact-path }}`)
+        echo $GITHUB_WORKSPACE
+        echo $GITHUB_ACTION_PATH
+        
+        app_hash_components=(`sha256sum GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}`)
         app_hash=${app_hash_components[0]}
         
         curl -X POST ${{ inputs.api-url }} \
-          -F bundle=@dist/bundle.js -F app=@${{ inputs.app-artifact-path }} -F 'head_sha=${{ inputs.head-sha }}' \
+          -F bundle=@dist/bundle.js -F app=@GITHUB_WORKSPACE/${{ inputs.app-artifact-path }} -F 'head_sha=${{ inputs.head-sha }}' \
           -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
           -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
           -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
