@@ -5,9 +5,9 @@ inputs:
   api-url:
     required: true
     description: api url
-  app-artifact-name:
+  app-artifact-path:
     required: true
-    description: app name
+    description: app path
   workflow-run-id:
     description: workflow run Id
     default: ${{ github.run_id }}
@@ -33,22 +33,18 @@ runs:
     - run: |
         yarn install
         yarn build
-      shell: bash
-      working-directory: .kunimasu/${{ inputs.branch }}
-    - name: Upload bundle file
-      uses: actions/upload-artifact@v3
-      with:
-        name: bundle
-        path: .kunimasu/${{ inputs.branch }}/dist/bundle.js
-    - run: |
+
         target_device_list=`node dist/bundle.js targetDeviceList`
-        echo $target_device_list
         sdk_version=`node dist/bundle.js sdkVersion`
+
         bundle_hash_components=(`sha256sum dist/bundle.js`)
         bundle_hash=${bundle_hash_components[0]}
-        echo $bundle_hash
-        app_hash=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
-        curl -X POST -F file1=@dist/bundle.js ${{ inputs.api-url }} -F 'head_sha=${{ inputs.head-sha }}' \
+        
+        app_hash_components=(`sha256sum ${{ inputs.app-artifact-path }}`)
+        app_hash=${app_hash_components[0]}
+        
+        curl -X POST ${{ inputs.api-url }} \
+          -F bundle=@dist/bundle.js -F app=@${{ inputs.app-artifact-path }} -F 'head_sha=${{ inputs.head-sha }}' \
           -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
           -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
           -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
