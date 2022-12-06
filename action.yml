@@ -32,6 +32,9 @@ runs:
         python-version: '3.10'
     - run: |
         
+        pip install --upgrade pip
+        pip install -r $GITHUB_ACTION_PATH/requirements.txt
+        
         workflow_run_id=${{ inputs.workflow-run-id }}
         api_url=${{ inputs.api-url }}
         test_trigger_url=${api_url/\{api_name\}/githubTestTrigger}
