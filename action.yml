@@ -27,58 +27,28 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-python@v4
       with:
-        node-version: 16
+        python-version: '3.10'
     - run: |
-        yarn install
-        yarn build
         
-        app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}
-
-        target_device_list=`node dist/bundle.js targetDeviceList`
-        sdk_version=`node dist/bundle.js sdkVersion`
-
-        bundle_hash_components=(`sha256sum dist/bundle.js`)
-        bundle_hash=${bundle_hash_components[0]}
-        
-        app_hash_components=(`sha256sum $app_artifact_full_path`)
-        app_hash=${app_hash_components[0]}
-        
+        workflow_run_id=${{ inputs.workflow-run-id }}
         api_url=${{ inputs.api-url }}
         test_trigger_url=${api_url/\{api_name\}/githubTestTrigger}
-        storage_access_token_url=${api_url/\{api_name\}/githubStorageAccessToken}
+        storage_access_token_url=${api_url/\{api_name\}/githubStorageAccessToken}        
+        app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}        
         
-        storage_access_tokens=(`curl -X POST $storage_access_token_url -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'`)
-        bundle_storage_url=${storage_access_tokens[0]}
-        app_storage_url=${storage_access_tokens[1]}
-        echo $bundle_storage_url
-        echo $app_storage_url
-
-        curl -X PUT -H 'Content-Type: text/javascript' --data-binary @dist/bundle.js $bundle_storage_url
+        app_storage_url=(`curl -X POST $storage_access_token_url -F 'workflow_run_id="'"$workflow_run_id"'"'`)
         curl -X PUT -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
-
+        
+        test_plans=`python3 $GITHUB_ACTION_PATH/src/main.py ./runners`
+        echo $test_plans
+        
         curl -X POST $test_trigger_url \
           -F 'head_sha=${{ inputs.head-sha }}' \
-          -F 'github_api_url=${{ inputs.github-api-url }}' -F 'repository=${{ inputs.repository }}' \
-          -F 'app_artifact_name=${{ inputs.app-artifact-name }}' -F 'workflow_run_id=${{ inputs.workflow-run-id }}' \
-          -F 'target_device_list="'"$target_device_list"'"' -F 'sdk_version="'"$sdk_version"'"' \
-          -F 'bundle_hash="'"$bundle_hash"'"' -F 'app_hash="'"$app_hash"'"'
+          -F 'github_api_url=${{ inputs.github-api-url }}' \
+          -F 'repository=${{ inputs.repository }}' \
+          -F 'workflow_run_id="'"$workflow_run_id"'"' \
+          -F 'test_plans="'"$test_plans"'"'
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
-
-#    - name: chmod
-#     run: chmod +x $GITHUB_ACTION_PATH/script.sh
-#      shell: bash
-#    - name: call script
-#      run: $GITHUB_ACTION_PATH/script.sh
-#      shell: bash
-
-#runs:
-#  using: docker
-#  image: Dockerfile
-#  env:
-#    KUNIMASU_URL: ${{ inputs.kunimasu-url }}
-#    HEAD_SHA: ${{ inputs.head-sha }}
-#    GITHUB_API_URL: ${{ inputs.github-api-url }}
-#    REPOSITORY: ${{ inputs.repository }}
