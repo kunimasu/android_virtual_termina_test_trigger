@@ -17,12 +17,14 @@ class TestPlanStep:
 
 class TestPlan:
     version: Final[str]
+    title: Final[str]
     device: Final[str]
     os_version: Final[str]
     steps: Final[List[TestPlanStep]]
 
-    def __init__(self, version: str, device: str, os_version: str, steps: List[TestPlanStep]):
+    def __init__(self, version: str, title: str, device: str, os_version: str, steps: List[TestPlanStep]):
         self.version = version
+        self.title = title
         self.device = device
         self.os_version = os_version
         self.steps = steps
@@ -33,13 +35,14 @@ class TestPlan:
         for step in obj['steps']:
             for action, param in step.items():
                 steps.append(TestPlanStep(action, param))
-        return TestPlan(obj['version'], obj['device'], obj['os-version'], steps)
+        return TestPlan(obj['version'], obj['title'], obj['device'], obj['os-version'], steps)
 
     @property
     def dict(self) -> dict:
         map_handler: Callable[[TestPlanStep], dict] = lambda x: x.dict
         return {
             'version': self.version,
+            'title': self.title,
             'device': self.device,
             'osVersion': self.os_version,
             'steps': list(map(map_handler, self.steps)),
