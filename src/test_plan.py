@@ -35,7 +35,9 @@ class TestPlan:
         for step in obj['steps']:
             for action, param in step.items():
                 steps.append(TestPlanStep(action, param))
-        return TestPlan(obj['version'], obj['title'], obj['device'], obj['os-version'], steps)
+        device = obj['device']
+        os_version = obj['os-version']
+        return TestPlan(obj['version'], obj.get('title', f'${device}(${os_version})'), device, os_version, steps)
 
     @property
     def dict(self) -> dict:
