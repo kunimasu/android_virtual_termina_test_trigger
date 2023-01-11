@@ -52,7 +52,7 @@ class TestPlan:
     def dict(self) -> dict:
         map_handler: Callable[[TestPlanStep], dict] = lambda x: x.dict
         return {
-            'format_version': self.format_version,
+            'formatVersion': self.format_version,
             'device': self.device,
             'osVersion': self.os_version,
             'languages': self.languages,
