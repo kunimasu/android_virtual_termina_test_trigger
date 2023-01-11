@@ -2,11 +2,13 @@ name: test trigger
 description: "Test trigger for Kunimasu"
 
 inputs:
+  token:
+    required: true
+    description: app token
   api-url:
-    required: true
     description: api url
+    default: https://asia-northeast1-android-virtual-terminal-dev.cloudfunctions.net/__name__/v1
   app-artifact-path:
-    required: true
     description: app path
   workflow-run-id:
     description: workflow run Id
@@ -31,27 +33,39 @@ runs:
       with:
         python-version: '3.10'
     - run: |
-        
         pip install --upgrade pip
         pip install -r $GITHUB_ACTION_PATH/requirements.txt
-        
-        workflow_run_id=${{ inputs.workflow-run-id }}
+      name: Setup Python
+      shell: bash
+      working-directory: .kunimasu/${{ inputs.branch }}
+    - run: |
+        token=${{ inputs.token }}
         api_url=${{ inputs.api-url }}
-        test_trigger_url=${api_url/\{api_name\}/githubTestTrigger}
-        storage_access_token_url=${api_url/\{api_name\}/githubStorageAccessToken}        
+        workflow_run_id=${{ inputs.workflow-run-id }}
+        file_type=apk
+        
+        test_trigger_url=${api_url/__name__/githubTestTrigger}
+        storage_access_token_url=${api_url/__name__/githubStorageAccessToken}        
         app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}        
         
-        app_storage_url=(`curl -X POST $storage_access_token_url -F 'workflow_run_id="'"$workflow_run_id"'"'`)
-        curl -X PUT -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
+        app_storage_url_resp=(`curl -s -X POST $storage_access_token_url -F 'file_type="'"$file_type"'"' -F 'workflow_run_id="'"$workflow_run_id"'"' -w " %{http_code}"`)
+        app_storage_url = ${app_storage_url_resp[0]}
+        app_storage_url_status = ${app_storage_url_resp[1]}
+        if [ $app_storage_url_status != 200 ]; then
+          echo Failed to upload apk. Response status code: $app_storage_url_status
+          exit(-1)
+        fi
+        curl -s -X PUT -H 'Content-Type: application/vnd.android.package-archive' --data-binary @$app_artifact_full_path $app_storage_url
         
         test_plans=`python3 $GITHUB_ACTION_PATH/src/main.py ./runners`
-        echo $test_plans
         
-        curl -X POST $test_trigger_url \
+        curl -s -X POST $test_trigger_url \
+          -F 'branch=${{ inputs.branch }}' \
           -F 'head_sha=${{ inputs.head-sha }}' \
           -F 'github_api_url=${{ inputs.github-api-url }}' \
           -F 'repository=${{ inputs.repository }}' \
           -F 'workflow_run_id="'"$workflow_run_id"'"' \
           -F 'test_plans="'"$test_plans"'"'
+      name: Trigger to system
       shell: bash
       working-directory: .kunimasu/${{ inputs.branch }}
