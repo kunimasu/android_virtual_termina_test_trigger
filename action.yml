@@ -44,9 +44,9 @@ runs:
         workflow_run_id=${{ inputs.workflow-run-id }}
         file_type=apk
         
-        test_trigger_url=${api_url/__name__/githubTestTrigger}
-        storage_access_token_url=${api_url/__name__/githubStorageAccessToken}        
-        app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}        
+        test_trigger_url=${api_url/__name__/githubTestTrigger}/$token
+        storage_access_token_url=${api_url/__name__/githubStorageAccessToken}/$token
+        app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}
         
         echo $test_trigger_url
         echo $storage_access_token_url
