@@ -49,8 +49,8 @@ runs:
         app_artifact_full_path=$GITHUB_WORKSPACE/${{ inputs.app-artifact-path }}        
         
         app_storage_url_resp=(`curl -s -X POST $storage_access_token_url -F 'file_type="'"$file_type"'"' -F 'workflow_run_id="'"$workflow_run_id"'"' -w " %{http_code}"`)
-        app_storage_url = ${app_storage_url_resp[0]}
-        app_storage_url_status = ${app_storage_url_resp[1]}
+        app_storage_url=${app_storage_url_resp[0]}
+        app_storage_url_status=${app_storage_url_resp[1]}
         if [ $app_storage_url_status != 200 ]; then
           echo Failed to upload apk. Response status code: $app_storage_url_status
           exit(-1)
