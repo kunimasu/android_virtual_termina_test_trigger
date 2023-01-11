@@ -51,9 +51,9 @@ runs:
         echo $test_trigger_url
         echo $storage_access_token_url
         
-        app_storage_url_resp=(`curl -s -X POST $storage_access_token_url -F 'file_type="'"$file_type"'"' -F 'workflow_run_id="'"$workflow_run_id"'"' -w " %{http_code}"`)
-        app_storage_url=${app_storage_url_resp[0]}
-        app_storage_url_status=${app_storage_url_resp[1]}
+        app_storage_url_resp=`curl -s -X POST $storage_access_token_url -F 'file_type="'"$file_type"'"' -F 'workflow_run_id="'"$workflow_run_id"'"' -w " %{http_code}"`
+        app_storage_url_status=${app_storage_url_resp: -3:3}
+        app_storage_url=${RES: 0:$((${#app_storage_url_resp} -3))}
         
         echo $app_storage_url_resp
         echo $app_storage_url
