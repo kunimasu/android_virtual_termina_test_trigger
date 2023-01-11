@@ -17,7 +17,6 @@ def main():
             test_plans.append(TestPlan.create(yaml.safe_load(f)))
     map_handler: Callable[[TestPlan], dict] = lambda x: x.dict
     sys.stdout.write(json.dumps(list(map(map_handler, test_plans))))
-    # .replace("\"", "\\\""))
 
 if __name__ == '__main__':
     main()
