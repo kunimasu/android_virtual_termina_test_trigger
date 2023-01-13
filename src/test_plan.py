@@ -4,9 +4,9 @@ class TestPlanStep:
     action: Final[str]
     param: Final[str]
 
-    def __init__(self, action, param):
-        self.action = action
-        self.param = param
+    def __init__(self, action: str, param: str):
+        self.action = str(action)
+        self.param = str(param)
 
     @property
     def dict(self) -> dict:
@@ -38,10 +38,10 @@ class TestPlan:
 
     @staticmethod
     def create(obj: any):
-        format_version = obj['format-version']
-        device = obj['device']
-        os_version = obj['os-version']
-        languages = obj['languages']
+        format_version = str(obj['format-version'])
+        device = str(obj['device'])
+        os_version = str(obj['os-version'])
+        languages = list(map(str, obj['languages']))
         steps: List[TestPlanStep] = []
         for step in obj['steps']:
             for action, param in step.items():
